@@ -1,0 +1,33 @@
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+*.egg-info/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+venv/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+
+# Data files (DO NOT COMMIT)
+data/input/candidates.jsonl
+data/output/*.csv
+
+# Artifacts
+artifacts/
+
+# Environment
+.env
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# uv.lock SHOULD be committed -- do not ignore it

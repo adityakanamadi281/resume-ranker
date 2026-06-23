@@ -1,0 +1,14 @@
+version: "3.9"
+services:
+  ranker:
+    build: .
+    volumes:
+      - ./data/input:/app/data/input:ro
+      - ./data/output:/app/data/output
+      - ./artifacts:/app/artifacts
+    environment:
+      - RANKER_TOP_N=100
+    deploy:
+      resources:
+        limits:
+          memory: 16G

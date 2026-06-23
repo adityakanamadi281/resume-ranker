@@ -15,9 +15,6 @@ venv/
 .vscode/
 .idea/
 
-# Data files (DO NOT COMMIT)
-data/input/candidates.jsonl
-data/output/*.csv
 
 # Artifacts
 artifacts/

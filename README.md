@@ -1,11 +1,49 @@
 # Resume Ranker
 
-Production-grade candidate ranking system. Reads `candidates.jsonl` and
-`job_description.docx`, ranks 100,000+ candidates in under 5 minutes on
-a single CPU core (16 GB RAM), and outputs exactly 100 ranked rows to
-`submission.csv`.
+Production-grade offline candidate ranking system built for the Redrob Intelligent Candidate Discovery & Ranking Hackathon.
 
-## Setup and installation
+## Overview
+
+This project ranks candidates from a large candidate pool (100,000 candidates) against a job description using semantic retrieval, structured feature scoring, behavioral signals, and deterministic reasoning.
+
+The system is designed to be:
+- **Offline-first**
+- **CPU-only during ranking**
+- **Reproducible**
+- **Explainable**
+- **Fast enough for large candidate pools**
+
+## Key Features
+
+- **Offline semantic retrieval** using `BAAI/bge-small-en-v1.5`
+- **FAISS IndexFlatIP** vector search
+- **Streaming JSONL reader** using `orjson`
+- **Structured feature extraction**
+- **Behavioral signal scoring**
+- **Honeypot filtering**
+- **Rule-based candidate explanations**
+- **Deterministic ranking**
+- **Audit report generation**
+- **Fully reproducible pipeline**
+
+
+## Technology Stack
+
+- **Python 3.12**
+- **Sentence Transformers** (`BAAI/bge-small-en-v1.5`)
+- **FAISS CPU**
+- **Polars**
+- **NumPy**
+- **PyArrow**
+- **orjson**
+- **RapidFuzz**
+- **Typer**
+- **Rich**
+- **tqdm**
+- **jsonschema**
+
+
+## Setup
 
 ```bash
 # Clone the repository
@@ -13,121 +51,172 @@ git clone https://github.com/adityakanamadi281/resume-ranker.git
 
 # Navigate to the project directory
 cd resume-ranker
-
-# Install dependencies using uv or make
-uv sync
-# or:
-make install
 ```
 
-## Running the pipeline
 
-Ensure your input files are placed in the `data/input` directory:
-* `data/input/candidates.jsonl`
-* `data/input/job_description.docx`
+```bash
+uv sync
+```
 
-### Run using Makefile
+## Run
+
+Place inputs in `data/input/`:
+
+- `candidates.jsonl`
+- `job_description.docx`
+
+Then run:
+
 ```bash
 make rank
+make validate
 ```
 
-### Run using direct uv
+Or directly:
+
 ```bash
-uv run python -m scripts.rank
+uv run rank --candidates data/input/candidates.jsonl --jd data/input/job_description.docx --output data/output/submission.csv
+uv run validate --submission data/output/submission.csv
 ```
 
-Output will be written to `data/output/submission.csv`.
+Outputs:
 
-## Project structure
+- `data/output/submission.csv`
+- `data/output/submission.audit.json`
+- `artifacts/manifest.json`
+- `artifacts/candidate_embeddings.npy`
+- `artifacts/id_map.json`
+- `artifacts/faiss.index`
 
+## Pre-download Models
+
+Before running the ranking pipeline in an offline environment, you must download and cache the embedding model once while you have network access:
+
+```bash
+python scripts/download_model.py
 ```
+
+This downloads and caches `BAAI/bge-small-en-v1.5` in your local Hugging Face cache.
+
+
+## Project Structure
+
+```text
 resume-ranker/
-├── pyproject.toml                 # uv-managed dependencies
-├── uv.lock                        # pinned versions
-├── Makefile                       # convenience targets
-├── Dockerfile / docker-compose.yml
+├── configs/                     # Documented ranking profiles
+│   ├── default.toml
+│   ├── fast.toml
+│   └── quality.toml
 ├── data/
-│   ├── input/
-│   │   ├── candidates.jsonl       # INPUT (required)
-│   │   ├── job_description.docx   # INPUT (required)
-│   │   └── candidate_schema.json  # optional reference
-│   └── output/
-│       └── submission.csv         # OUTPUT
-├── artifacts/                     # cached embeddings + FAISS index
-└── src/
-    ├── config.py                  # ALL tunable constants (single source of truth)
-    ├── schema.py                  # Pydantic v2 candidate models
-    ├── exceptions.py
-    ├── pipeline.py                # end-to-end orchestration
-    ├── parsers/
-    │   ├── docx_parser.py         # reads job_description.docx
-    │   └── candidate_parser.py    # streaming JSONL parser with validation
-    ├── features/
-    │   ├── text_builder.py        # rich embedding text per candidate
-    │   ├── signal_processor.py    # redrob_signals -> normalized [0,1] features
-    │   └── honeypot_detector.py   # 6 rule-based consistency checks
-    ├── embedding/
-    │   ├── embedder.py            # sentence-transformers (+ TF-IDF fallback)
-    │   └── index.py               # FAISS IVF index build and search
-    └── ranking/
-        ├── scorer.py              # 5-factor hybrid scoring
-        ├── reasoner.py            # rule-based explanation generation
-        └── aggregator.py          # top-N with deterministic tie-break
+│   └── input/                   # Challenge inputs
+│       ├── candidate_schema.json
+│       ├── candidates.jsonl
+│       └── job_description.docx
+├── scripts/                     # Utility scripts
+│   ├── download_model.py
+│   └── smoke_run.ps1
+├── src/
+│   └── resume_ranker/           # Main application package
+│       ├── __init__.py
+│       ├── config.py
+│       ├── exceptions.py
+│       ├── app/                 # Orchestration, run context, output validation
+│       │   ├── __init__.py
+│       │   ├── output_writer.py
+│       │   ├── pipeline.py
+│       │   └── run_context.py
+│       ├── cli/                 # Command-line interfaces
+│       │   ├── __init__.py
+│       │   ├── benchmark.py
+│       │   ├── precompute.py
+│       │   ├── rank.py
+│       │   └── validate.py
+│       ├── domain/              # Schema, scoring logic, honeypot rules, explanations
+│       │   ├── __init__.py
+│       │   ├── explanations.py
+│       │   ├── honeypot_rules.py
+│       │   ├── schema.py
+│       │   └── scoring.py
+│       ├── evaluation/          # Audit reports, metrics, benchmarks
+│       │   ├── __init__.py
+│       │   ├── audit.py
+│       │   ├── benchmark.py
+│       │   └── metrics.py
+│       ├── features/            # Text builders and signal feature generation
+│       │   ├── __init__.py
+│       │   ├── signal_features.py
+│       │   └── text_builder.py
+│       └── infrastructure/      # Readers, embedding providers, vector index, artifact store
+│           ├── __init__.py
+│           ├── artifact_store.py
+│           ├── candidate_reader.py
+│           ├── embedder.py
+│           ├── jd_reader.py
+│           └── vector_index.py
+├── tests/                       # Test suite
+│   ├── __init__.py
+│   ├── conftest.py
+│   ├── integration/             # Integration tests
+│   │   └── test_pipeline_small_fixture.py
+│   ├── regression/              # Regression tests
+│   │   └── test_artifact_manifest.py
+│   └── unit/                    # Unit tests
+│       ├── test_cli.py
+│       ├── test_honeypot.py
+│       ├── test_readers.py
+│       └── test_scorer.py
+├── .gitignore
+├── .python-version
+├── Dockerfile
+├── LICENSE
+├── Makefile
+├── README.md
+├── docker-compose.yml
+├── pyproject.toml
+└── uv.lock
 ```
 
-## Scoring model
+## Scoring
 
+```text
+composite = 0.35 * semantic_score
+          + 0.15 * title_score
+          + 0.20 * skill_score
+          + 0.20 * behavioral_score
+          + 0.10 * experience_score
 ```
-composite = 0.35 * semantic_score    (sentence-transformers / TF-IDF cosine)
-          + 0.15 * title_score       (JD keyword overlap with candidate title)
-          + 0.20 * skill_score       (JD keyword overlap with skills list)
-          + 0.20 * behavioral_score  (redrob_signals: availability, activity)
-          + 0.10 * experience_score  (years_of_experience vs ideal range)
-```
 
-All weights live in `src/config.py` and can be overridden at runtime via
-environment variables: `RANKER_WEIGHT_SEMANTIC=0.4 uv run python -m scripts.rank`
+Weights and thresholds live in `resume_ranker.config.AppConfig` and can be
+overridden with `RANKER_*` environment variables.
 
-## Honeypot detection
+## Artifact Safety
 
-Six consistency rules run on every candidate before scoring. Honeypots are
-excluded entirely from the index (not just ranked lower). Rules per the
-spec: duration mismatch, expert+zero experience, inverted salary, job
-before education, high completeness + low connections, impossible timeline.
+The cache is guarded by `artifacts/manifest.json`, which records:
 
-**Note:** with the spec's rules applied to this dataset, ~30% of candidates
-are flagged — see `ARCHITECTURE.md` for an explanation of why and which
-rules are responsible.
+- candidate file hash
+- job description file hash
+- model name
+- embedding mode
+- config hash
+- candidate count
+- embedding dimension
+- creation timestamp
 
-## Tuning
-
-Every constant is in `src/config.py` with a docstring. Override via env
-vars (`RANKER_*`) or a `.env` file. Weights that don't sum to 1.0 raise
-a `ValidationError` on startup.
+If any relevant input or setting changes, embeddings are rebuilt instead of
+silently reused.
 
 ## Tests
 
 ```bash
-uv run pytest tests/ -v --cov=src
+make test
 ```
 
-36 tests, covering parsers, honeypot rules, all scoring components, and
-tie-breaking. All pass.
+The suite covers domain scoring, honeypot rules, readers, full small-fixture
+pipeline behavior, and stale artifact protection.
 
 ## Docker
 
 ```bash
 docker build -t resume-ranker .
-docker run -v $(pwd)/data/output:/app/data/output resume-ranker
-# or: make docker-build docker-run
+docker run -v $(pwd)/data/input:/app/data/input:ro -v $(pwd)/data/output:/app/data/output resume-ranker
 ```
-
-## Embedding model note
-
-The primary path uses `all-MiniLM-L6-v2` from sentence-transformers,
-which requires a one-time model download from HuggingFace (network access
-needed at first run, then cached locally). If the model cannot be loaded,
-the system automatically falls back to a TF-IDF + TruncatedSVD embedder
-(no download required) and logs a clear warning. Both paths produce
-valid, L2-normalized embeddings; the TF-IDF fallback runs slightly faster
-in CPU-only sandboxes.

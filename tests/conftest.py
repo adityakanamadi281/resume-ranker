@@ -5,7 +5,7 @@ from typing import Any, Dict
 
 import pytest
 
-from src.schema import Candidate
+from resume_ranker.domain.schema import Candidate
 
 
 def _base_candidate_dict(**overrides: Any) -> Dict[str, Any]:

@@ -16,9 +16,6 @@ venv/
 .idea/
 
 
-# Artifacts
-artifacts/
-
 # Environment
 .env
 
@@ -27,4 +24,11 @@ dist/
 build/
 *.egg-info/
 
-# uv.lock SHOULD be committed -- do not ignore it
+# Test coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+.uv-cache 
+.agents 
+

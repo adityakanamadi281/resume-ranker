@@ -4,19 +4,19 @@ install:
 	uv sync
 
 rank:
-	uv run python -m scripts.rank --candidates data/input/candidates.jsonl --jd data/input/job_description.docx --output data/output/submission.csv
+	uv run rank --candidates data/input/candidates.jsonl --jd data/input/job_description.docx --output data/output/submission.csv
 
 precompute:
-	uv run python -m scripts.precompute --candidates data/input/candidates.jsonl --output artifacts/
+	uv run precompute --candidates data/input/candidates.jsonl --jd data/input/job_description.docx
 
 validate:
-	uv run python -m scripts.validate --submission data/output/submission.csv
+	uv run validate --submission data/output/submission.csv
 
 test:
-	uv run pytest tests/ -v --cov=src
+	uv run pytest tests/ -v --cov=src/resume_ranker
 
 lint:
-	uv run ruff check src/ && uv run mypy src/
+	uv run ruff check src/resume_ranker tests && uv run mypy src/resume_ranker
 
 docker-build:
 	docker build -t resume-ranker .

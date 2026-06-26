@@ -2,50 +2,62 @@
 name = "resume-ranker"
 version = "0.1.0"
 description = "Production-grade resume ranking system for Redrob Hackathon"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 authors = [{ name = "Redrob Team" }]
 readme = "README.md"
 
 dependencies = [
     "numpy",
-    "pandas",
+    "polars",
     "pydantic>=2.0",
     "pydantic-settings",
     "python-docx",
     "sentence-transformers",
     "faiss-cpu",
-    "scikit-learn",
-    "nltk",
+    "orjson",
+    "pyarrow",
+    "joblib",
+    "rapidfuzz",
+    "typer",
+    "rich",
+    "tqdm",
     "jsonschema",
+    "streamlit",
 ]
 
 [project.optional-dependencies]
 dev = ["pytest", "pytest-cov", "ruff", "mypy"]
 
 [project.scripts]
-rank = "scripts.rank:main"
-precompute = "scripts.precompute:main"
-validate = "scripts.validate:main"
+rank = "resume_ranker.cli.rank:main"
+precompute = "resume_ranker.cli.precompute:main"
+validate = "resume_ranker.cli.validate:main"
+benchmark = "resume_ranker.cli.benchmark:main"
 
 [dependency-groups]
 dev = ["pytest", "pytest-cov", "ruff", "mypy"]
 
 [tool.ruff]
 line-length = 100
-target-version = "py311"
+target-version = "py312"
 
 [tool.mypy]
 strict = true
-python_version = "3.11"
+python_version = "3.12"
+
+[[tool.mypy.overrides]]
+module = ["polars.*", "numpy.*", "faiss.*", "docx.*", "joblib.*", "rapidfuzz.*", "jsonschema.*", "jsonschema.exceptions.*"]
+ignore_missing_imports = true
+follow_imports = "skip"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-v"
+pythonpath = ["src"]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src", "scripts"]
+packages = ["src/resume_ranker"]
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
-

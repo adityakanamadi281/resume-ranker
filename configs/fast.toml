@@ -1,0 +1,16 @@
+[model]
+embedding_model = "BAAI/bge-small-en-v1.5"
+embedding_device = "cpu"
+embedding_batch_size = 64
+offline_only = true
+
+[retrieval]
+faiss_index = "IndexFlatIP"
+faiss_top_k = 300
+
+[weights]
+semantic = 0.35
+skills = 0.30
+behavior = 0.20
+experience = 0.10
+location = 0.05

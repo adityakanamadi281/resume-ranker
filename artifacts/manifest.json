@@ -1,0 +1,19 @@
+{
+  "candidate_count": 60840,
+  "candidate_file_hash": "de7b8cae39a9f9378a2cd4f8153bfc1f84960bce0ae520f263423d129df4b335",
+  "candidate_hash": "de7b8cae39a9f9378a2cd4f8153bfc1f84960bce0ae520f263423d129df4b335",
+  "config_hash": "d494344fb9da492e46052d1efade5ed107c342fadc65a9a9b8605e013c93aa67",
+  "created_at": "2026-06-25T13:53:12.039621+00:00",
+  "embedding_dim": 384,
+  "embedding_dimension": 384,
+  "embedding_dtype": "float32",
+  "embedding_mode": "sentence-transformers-offline",
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "faiss_index": "IndexFlatIP",
+  "honeypots_excluded": 39160,
+  "jd_file_hash": "",
+  "model_name": "BAAI/bge-small-en-v1.5",
+  "schema_hash": "fe5b79aec6f5d01446edbf5e50298eeb651ef5f5d3850f025c6b965e405c43f1",
+  "total_candidates": 100000,
+  "version": 1
+}

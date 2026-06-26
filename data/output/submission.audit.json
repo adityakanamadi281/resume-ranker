@@ -1,0 +1,46 @@
+{
+  "candidate_counts": {
+    "honeypot_exclusion_rate": 0.3916,
+    "honeypots_excluded": 39160,
+    "total": 100000,
+    "valid_after_honeypot_filter": 60840
+  },
+  "feature_contribution_summary": {
+    "behavioral_score": 0.6702,
+    "experience_score": 0.9296,
+    "location_score": 0.7828,
+    "semantic_score": 0.8117,
+    "skill_score": 0.2781,
+    "title_score": 0.711
+  },
+  "reproducibility": {
+    "candidate_file_hash": "de7b8cae39a9f9378a2cd4f8153bfc1f84960bce0ae520f263423d129df4b335",
+    "config_hash": "d494344fb9da492e46052d1efade5ed107c342fadc65a9a9b8605e013c93aa67",
+    "embedding_mode": "sentence-transformers-offline",
+    "jd_file_hash": "",
+    "model_name": "BAAI/bge-small-en-v1.5"
+  },
+  "runtime_seconds": 1.412,
+  "stage_seconds": {
+    "csv_write": 0.005,
+    "embed_jd": 0.212,
+    "explanation": 0.065,
+    "faiss_search": 0.195,
+    "feature_scoring": 0.321,
+    "load_artifacts": 0.56,
+    "parse_job_description": 0.053
+  },
+  "top_n": {
+    "rows": 100,
+    "score_distribution": {
+      "max": 0.8138,
+      "mean": 0.7157800000000001,
+      "min": 0.6839,
+      "p50": 0.7098
+    }
+  },
+  "validation": {
+    "errors": [],
+    "passed": true
+  }
+}

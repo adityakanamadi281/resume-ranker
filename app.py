@@ -33,8 +33,13 @@ INDEX_PATH = ARTIFACTS_DIR / "faiss.index"
 @st.cache_resource
 def load_embedding_model(model_name: str) -> Any:
     from sentence_transformers import SentenceTransformer
-    # Force cpu and local_files_only=True as required
-    return SentenceTransformer(model_name, device="cpu", local_files_only=True)
+    try:
+        # Try loading locally first (offline-first design)
+        return SentenceTransformer(model_name, device="cpu", local_files_only=True)
+    except Exception:
+        # Fallback to downloading if not cached (useful for cloud deployments like Streamlit Cloud)
+        with st.spinner(f"Downloading embedding model '{model_name}' (first-time setup)..."):
+            return SentenceTransformer(model_name, device="cpu", local_files_only=False)
 
 @st.cache_resource
 def load_faiss_index(path: Path) -> Any:

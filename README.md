@@ -180,10 +180,10 @@ resume-ranker/
 
 ```text
 composite = 0.35 * semantic_score
-          + 0.15 * title_score
-          + 0.20 * skill_score
+          + 0.30 * skill_score
           + 0.20 * behavioral_score
           + 0.10 * experience_score
+          + 0.05 * location_score
 ```
 
 Weights and thresholds live in `resume_ranker.config.AppConfig` and can be
@@ -193,14 +193,20 @@ overridden with `RANKER_*` environment variables.
 
 The cache is guarded by `artifacts/manifest.json`, which records:
 
-- candidate file hash
-- job description file hash
-- model name
-- embedding mode
-- config hash
-- candidate count
-- embedding dimension
-- creation timestamp
+- candidate file hash (`candidate_file_hash` / `candidate_hash`)
+- job description file hash (`jd_file_hash`)
+- candidate schema file hash (`schema_hash`)
+- embedding model name (`model_name` / `embedding_model`)
+- embedding mode (`embedding_mode`)
+- config hash (`config_hash`)
+- candidate count post-filtering (`candidate_count`)
+- total candidates (`total_candidates`)
+- honeypots excluded count (`honeypots_excluded`)
+- embedding dimension (`embedding_dim` / `embedding_dimension`)
+- embedding data type (`embedding_dtype`)
+- FAISS index type (`faiss_index`)
+- creation timestamp (`created_at`)
+- manifest version (`version`)
 
 If any relevant input or setting changes, embeddings are rebuilt instead of
 silently reused.

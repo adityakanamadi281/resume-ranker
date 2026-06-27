@@ -1,5 +1,5 @@
 team_name: "Adi(The Begining)"
- 
+
 
 primary_contact:
   name: "Aditya Kanamadi"
@@ -66,7 +66,7 @@ declarations:
   read_submission_spec: true        
   code_is_original_work: true      
   no_collusion: true               
-  honeypot_check_done: false        
+  honeypot_check_done: true        
   reproduction_tested: true   
 
 

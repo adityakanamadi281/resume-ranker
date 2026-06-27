@@ -1,0 +1,71 @@
+team_name: "Adi(The Beggining)"  
+
+primary_contact:
+  name: "Aditya Kanamadi"
+  email: "adityakanamadis@gmail.com"  
+  phone: "+91-8867059353"     
+
+team_members:
+  - name: "Aditya Kanamadi"
+    email: "adityakanamadis@gmail.com" 
+    role: "AI Engineer(solo)"            
+
+
+github_repo: "https://github.com/adityakanamadi281/resume-ranker"  
+
+sandbox_link: "https://adi-resume-ranker.streamlit.app/" 
+
+reproduce_command: "uv run rank --candidates data/input/candidates.jsonl --jd data/input/job_description.docx --output data/output/submission.csv" 
+
+
+
+compute:
+  platform: "AMD Ryzen 7"                   
+  cpu_cores: 8                                
+  ram_gb: 16                                   
+  python_version: "3.12.3"                     
+  os: "windows 11"                             
+  uses_gpu_for_inference: false                 
+  has_network_during_ranking: false            
+  pre_computation_required: true              
+  pre_computation_time_minutes: 103 minutes            
+
+
+ai_tools_used:
+  - "Claude"        
+  - "Codex" 
+
+ai_usage_summary: |
+  Briefly describe how AI tools were used. Examples:
+  - "Used Claude for understanding the intention of the questions, project strutcure and prompt generation for AI Coding tools." 
+     No candidate data was fed to any LLM."
+  - "Used Codex for the coding tasks, writing the code and debugging."
+  - "Used Antigravity IDE for the complete development of the project."
+
+
+
+methodology_summary: |
+
+  "Our solution implements a two-stage, offline-first candidate ranking pipeline that combines semantic retrieval with deterministic multi-factor scoring to identify the most relevant candidates for a given Job Description (JD). 
+  During a one-time precomputation stage, candidate profiles are streamed using orjson, validated against the provided schema, filtered for honeypot and inconsistent profiles, and transformed into structured candidate documents. 
+  These documents are embedded using the BAAI/bge-small-en-v1.5 model, indexed with FAISS IndexFlatIP, and stored alongside engineered candidate features as reusable artifacts.During ranking, the uploaded JD is parsed, 
+  converted into a semantic embedding, and used to retrieve the most relevant candidates from the FAISS index. Retrieved candidates are then re-ranked using a weighted scoring framework that combines semantic similarity,
+  technical skill alignment, behavioral signals, experience fit, and location compatibility. Rule-based integrity checks penalize suspicious profiles, 
+  while deterministic explainability generates evidence-based reasoning for every recommendation without relying on external LLMs.
+  This hybrid retrieval and re-ranking approach minimizes inference time by reusing precomputed artifacts, 
+  satisfies the CPU-only and offline constraints, and delivers fast, reproducible, and transparent candidate rankings that go beyond traditional keyword-based matching."
+
+
+
+
+# Declarations
+
+declarations:
+  read_submission_spec: true        
+  code_is_original_work: true      
+  no_collusion: true               
+  honeypot_check_done: false        
+  reproduction_tested: true   
+
+
+

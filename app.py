@@ -590,3 +590,4 @@ if uploaded_file is not None:
 else:
     # Prompt the user to upload a file to begin ranking
     st.info("👈 Please upload a job description (.docx) to start the ranking process.")
+    

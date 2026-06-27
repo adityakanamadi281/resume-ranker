@@ -1,7 +1,3 @@
-# Resume Ranker
-
-Production-grade offline candidate ranking system built for the Redrob Intelligent Candidate Discovery & Ranking Hackathon.
-
 ## Overview
 
 This project ranks candidates from a large candidate pool (100,000 candidates) against a job description using semantic retrieval, structured feature scoring, behavioral signals, and deterministic reasoning.
@@ -12,6 +8,7 @@ The system is designed to be:
 - **Reproducible**
 - **Explainable**
 - **Fast enough for large candidate pools**
+
 
 ## Key Features
 
@@ -51,10 +48,8 @@ git clone https://github.com/adityakanamadi281/resume-ranker.git
 
 # Navigate to the project directory
 cd resume-ranker
-```
 
-
-```bash
+# Install dependencies 
 uv sync
 ```
 
@@ -97,6 +92,17 @@ python scripts/download_model.py
 ```
 
 This downloads and caches `BAAI/bge-small-en-v1.5` in your local Hugging Face cache.
+
+
+### Streamlit Application Execution
+To launch the interactive dashboard:
+
+```bash
+uv run streamlit run app.py
+```
+
+
+
 
 
 ## Project Structure
@@ -193,20 +199,14 @@ overridden with `RANKER_*` environment variables.
 
 The cache is guarded by `artifacts/manifest.json`, which records:
 
-- candidate file hash (`candidate_file_hash` / `candidate_hash`)
-- job description file hash (`jd_file_hash`)
-- candidate schema file hash (`schema_hash`)
-- embedding model name (`model_name` / `embedding_model`)
-- embedding mode (`embedding_mode`)
-- config hash (`config_hash`)
-- candidate count post-filtering (`candidate_count`)
-- total candidates (`total_candidates`)
-- honeypots excluded count (`honeypots_excluded`)
-- embedding dimension (`embedding_dim` / `embedding_dimension`)
-- embedding data type (`embedding_dtype`)
-- FAISS index type (`faiss_index`)
-- creation timestamp (`created_at`)
-- manifest version (`version`)
+- candidate file hash
+- job description file hash
+- model name
+- embedding mode
+- config hash
+- candidate count
+- embedding dimension
+- creation timestamp
 
 If any relevant input or setting changes, embeddings are rebuilt instead of
 silently reused.

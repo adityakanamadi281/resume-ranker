@@ -217,7 +217,13 @@ if uploaded_file is not None:
 
     # Display extracted text
     with st.expander("📄 Extracted Job Description Text", expanded=False):
-        st.text_area("", jd_text, height=200, disabled=True)
+        st.text_area(
+            "Job Description",
+            jd_text,
+            height=200,
+            disabled=True,
+            label_visibility="collapsed",
+        )
 
     # -------------------------------------------------------------
     # Step 4, 5, 6: Semantic search & Hybrid Re-ranking
@@ -452,7 +458,7 @@ if uploaded_file is not None:
     results_df = pl.DataFrame(display_rows)
     st.dataframe(
         results_df,
-        use_container_width=True,
+        width="stretch",
         hide_index=True,
         column_config={
             "Final Score": st.column_config.NumberColumn(format="%.4f"),
@@ -518,7 +524,7 @@ if uploaded_file is not None:
                     "Endorsements": s.endorsements
                 })
             if skills_list:
-                st.dataframe(pl.DataFrame(skills_list), use_container_width=True, hide_index=True)
+                st.dataframe(pl.DataFrame(skills_list), width="stretch", hide_index=True)
             else:
                 st.write("No skills data available.")
 

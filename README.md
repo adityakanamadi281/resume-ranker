@@ -1,6 +1,6 @@
 ## Overview
 
-This project ranks candidates from a large candidate pool (100,000 candidates) against a job description using semantic retrieval, structured feature scoring, behavioral signals, and deterministic reasoning.
+Resume Ranker matches and ranks 100,000+ candidates against a job description in ~2 seconds, fully offline with no LLM API calls or GPU dependency, using a precomputed FAISS vector index plus deterministic multi-factor scoring (semantic, skills, behavioral, experience, location).
 
 The system is designed to be:
 - **Offline-first**

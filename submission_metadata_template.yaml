@@ -38,7 +38,7 @@ ai_tools_used:
   - "Codex" 
 
 ai_usage_summary: |  
-  - "Used Claude for understanding the intention of the questions, project strutcure and prompt generation for AI Coding tools." 
+  - "Used Claude for understanding the architecture, project structure and prompt generation for AI Coding tools.Creating loops."  
      No candidate data was fed to any LLM."
   - "Used Codex for the coding tasks, writing the code and debugging."
   - "Used Antigravity IDE for the complete development of the project."
